@@ -2,6 +2,8 @@ import { Component } from 'react';
 import styled from 'styled-components';
 import { ThemeTypes, FormValues } from '../types';
 import Slider from 'react-input-slider';
+import NumberFormat, { NumberFormatValues } from 'react-number-format';
+import { getMinimumDownPaymentPercentage } from '../helpers';
 
 const StyledPaymentDetails = styled.div`
 	width: 100%;
@@ -20,61 +22,70 @@ class PaymentDetails extends Component<PaymentDetailProps, PaymentDetailState> {
 		const initial = this.props.initialFormValues;
 
 		this.state = {
-			property_value: initial.property_value,
-			downpayment_amount: initial.downpayment_amount,
-			downpayment_percentage: initial.downpayment_percentage,
-			downpayment_percentage_min: initial.downpayment_percentage_min,
-			downpayment_percentage_max: initial.downpayment_percentage_max,
-			loan_term_in_months: initial.loan_term_in_months,
-			interest_rate_per_year: initial.interest_rate_per_year
+			propertyValue: initial.propertyValue,
+			downPaymentAmount: initial.downPaymentAmount,
+			downPaymentPercentage: initial.downPaymentPercentage,
+			downPaymentPercentageMin: initial.downPaymentPercentageMin,
+			downPaymentPercentageMax: initial.downPaymentPercentageMax,
+			loanTermInMonths: initial.loanTermInMonths,
+			interestRatePerYear: initial.interestRatePerYear
 		};
 
-		this.handleInputChange = this.handleInputChange.bind(this);
+		this.handlePropertyValueChange = this.handlePropertyValueChange.bind(this);
+		this.handleDownPaymentAmountChange = this.handleDownPaymentAmountChange.bind(this);
 	}
 
-	handleInputChange(e: React.FormEvent) {
-    const target = (e.target as HTMLInputElement);
+	handlePropertyValueChange(values: NumberFormatValues) {
+		const newPropertyValue = Number(values.value);
+		const minimumDownPaymentPercentage = 
+			getMinimumDownPaymentPercentage(newPropertyValue);
 
-		if (target) {
-			const value = Number(target.value);
-			const name = target.name;
-	
+		if (this.state.downPaymentPercentageMin === minimumDownPaymentPercentage) {
 			this.setState({
-				[name]: value
+				propertyValue: newPropertyValue,
+				downPaymentAmount: newPropertyValue * (this.state.downPaymentPercentage / 100)
+			});
+		} else {
+			// Reset Down Payment Percentage to minimum when minimum percentage changes.
+			this.setState({
+				propertyValue: newPropertyValue,
+				downPaymentPercentageMin: minimumDownPaymentPercentage,
+				downPaymentPercentage: minimumDownPaymentPercentage,
+				downPaymentAmount: newPropertyValue * (minimumDownPaymentPercentage / 100)
 			});
 		}
-		return
   }
+
+	handleDownPaymentAmountChange(e: {x: number}) {
+		const updatedDownPaymentAmount = 
+		Math.round(this.state.propertyValue * (this.state.downPaymentPercentage / 100))
+		this.setState({
+			downPaymentPercentage: e.x,
+			downPaymentAmount: updatedDownPaymentAmount
+		});
+	}
 
 	render() {
 		return <StyledPaymentDetails>
 			<h2>Property Value</h2>
-			<input 
-				type={'number'}
-				name={'property_value'}
-				value={this.state.property_value}
-				onChange={this.handleInputChange}
+			<NumberFormat 
+				value={this.state.propertyValue} 
+				thousandSeparator={true} 
+				onValueChange={this.handlePropertyValueChange}
 			/>
-			{this.state.property_value}
 			<div style={{ marginTop: 20, fontSize: 15 }}>
-				{`Downpayment Amount: ${this.state.downpayment_amount}`}
+				{`down_payment Amount: `}
+				<NumberFormat value={this.state.downPaymentAmount} displayType={'text'} thousandSeparator={true} />
 			</div>
 			<div style={{ marginTop: 20, fontSize: 15 }}>
-				{`Downpayment Percentage: ${this.state.downpayment_percentage}`}
+				{`down_payment Percentage: ${this.state.downPaymentPercentage}%`}
 			</div>
 			<div style={{ marginTop: 20 }}>
 				<Slider 
-					xmin={this.state.downpayment_percentage_min} 
-					xmax={this.state.downpayment_percentage_max}
-					x={this.state.downpayment_percentage}
-					onChange={(e) => {
-						const updated_downpayment_amount = 
-							Math.round(this.state.property_value * (this.state.downpayment_percentage / 100))
-						this.setState({
-							downpayment_percentage: e.x,
-							downpayment_amount: updated_downpayment_amount
-						});
-					}}
+					xmin={this.state.downPaymentPercentageMin} 
+					xmax={this.state.downPaymentPercentageMax}
+					x={this.state.downPaymentPercentage}
+					onChange={this.handleDownPaymentAmountChange}
 				/>
 			</div>
 		</StyledPaymentDetails>
