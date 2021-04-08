@@ -8,12 +8,15 @@ export type ThemeInterface = {
 	};
 };
 
+export type FormFields = 'propertyValue' | 'downPaymentPercentage' | 'loanTerm' | 'interestRate';
+
 export interface FormValues {
 	propertyValue: number;
 	downPaymentAmount: number;
 	downPaymentPercentage: number;
-	downPaymentPercentageMin: number;
-	downPaymentPercentageMax: number;
+	minimumDownPaymentPercentage: number;
+	maximumDownPaymentPercentage: number;
 	loanTermInMonths: number;
 	interestRatePerYear: number;
+	interestRateErrorMessage?: boolean;
 };

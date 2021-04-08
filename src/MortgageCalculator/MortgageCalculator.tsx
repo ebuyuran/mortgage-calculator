@@ -1,67 +1,96 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import PaymentDetails from './PaymentDetails/PaymentDetails';
-import { ThemeTypes, FormValues } from './types';
+import MonthlyPayment from './MonthlyPayment/MonthlyPayment';
+import { 
+	getMinimumDownPaymentPercentage, 
+	downPaymentPercentageLimit,
+	highMinimumDownPaymentPercentage
+} from './helpers';
+import { ThemeTypes, FormValues, FormFields } from './types';
 import { theme } from './theme';
-import { getMinimumDownPaymentPercentage } from './helpers';
 
-function MortgageCalculator() {
-	const [activeTheme, setActiveTheme] = useState<ThemeTypes>('light');
+type MortgageCalculatorProps = {
+	initialValues: FormValues;
+}
 
-	const StyledMortgageCalculator = styled.div`
-		min-height: 3em;
-		border-radius: .4em;
-		padding: 1.6em;
-		background: ${theme[activeTheme].background};
-	`;
+const StyledMortgageCalculator = styled.div`
+	min-height: 3em;
+	border-radius: .4em;
+	padding: 1.6em;
+	background: ${props => props.theme.background};
+`;
 
-	function getdown_paymentPercentageFromInitialValues(
-			propertyValue: number, 
-			downPaymentAmount: number, 
-			downPaymentPercentageMin: number, 
-			downPaymentPercentageMax: number
-		) {
+function MortgageCalculator(props: MortgageCalculatorProps) {
+	const [activeTheme] = useState<ThemeTypes>('light');
+	const [formValues, setFormValues] = useState<FormValues>(props.initialValues);
 
-		const calculatedPercentage = (downPaymentAmount * 100) / propertyValue;
+	function handleFormValueChange(field: FormFields, newValue: number) {
+		const current = formValues;
+		const updated = {...current};
 
-		if (
-				// Let's ensure that calculated percentage stands
-				// within min/max values.
-				calculatedPercentage < downPaymentPercentageMin || 
-				calculatedPercentage > downPaymentPercentageMax
-			) {
-			// If not, proceed with the minimum.
-			return downPaymentPercentageMin
-		} else {
-			return calculatedPercentage
+		switch (field) {
+			case 'propertyValue':
+				updated.propertyValue = newValue;
+
+				const updatedMinimumDownPaymentPercentage = 
+					getMinimumDownPaymentPercentage(updated.propertyValue);
+
+				if (updatedMinimumDownPaymentPercentage === current.minimumDownPaymentPercentage) {
+					// Calculate new down payment amount.
+					updated.downPaymentAmount = 
+						updated.propertyValue * (current.downPaymentPercentage / 100);
+				} else {
+					updated.minimumDownPaymentPercentage = updatedMinimumDownPaymentPercentage;
+					// Reset down payment percentage to minimum if
+					// it's not allowed by new minimum limit.
+					if (
+						// When new propert value is over down payment percentage limit,
+						updated.propertyValue >= downPaymentPercentageLimit &&
+						current.downPaymentPercentage < highMinimumDownPaymentPercentage
+					) {
+						// set the new minimum percentage to updated minimum limit.
+						updated.downPaymentPercentage = updated.minimumDownPaymentPercentage;
+						// calculate down payment amount accordingly,
+						updated.downPaymentAmount = 
+							updated.propertyValue * (updated.minimumDownPaymentPercentage / 100);
+					} else {
+						// or calculate with old percentage value.
+						updated.downPaymentAmount = 
+							updated.propertyValue * (current.downPaymentPercentage / 100);
+					}
+				}
+				break;
+
+			case 'downPaymentPercentage':
+				if (current.downPaymentPercentage !== newValue) {
+					updated.downPaymentAmount = 
+						Math.round(current.propertyValue * (newValue / 100));
+	
+					updated.downPaymentPercentage = newValue;
+				}
+				break;
+
+			case 'loanTerm':
+				updated.loanTermInMonths = newValue * 12;
+				break;
+
+			case 'interestRate':
+				updated.interestRatePerYear = newValue;
+				updated.interestRateErrorMessage = newValue < 1.00 || newValue > 9.55;
+				break;
 		}
+		
+		setFormValues(updated);
 	}
 
-	// These values will be obtained from an end-point later.
-	const initialFormValues: FormValues = {
-		propertyValue: 1200000,
-		downPaymentAmount: 240000,
-		downPaymentPercentage: -1,     // just to avoid TS error as it expects a number.
-		downPaymentPercentageMin: -1, // dummy data will be corrected just below.
-		downPaymentPercentageMax: 80, 
-		loanTermInMonths: 300,
-		interestRatePerYear: 2.49
-	}
-
-	// get the correct values.
-	initialFormValues.downPaymentPercentageMin = 
-		getMinimumDownPaymentPercentage(initialFormValues.propertyValue);
-
-	initialFormValues.downPaymentPercentage = 
-		getdown_paymentPercentageFromInitialValues(
-			initialFormValues.propertyValue, 
-			initialFormValues.downPaymentAmount,
-			initialFormValues.downPaymentPercentageMin,
-			initialFormValues.downPaymentPercentageMax
-		);
-
-	return <StyledMortgageCalculator>
-		<PaymentDetails initialFormValues={initialFormValues} activeTheme={activeTheme} />
+	return <StyledMortgageCalculator theme={theme[activeTheme]}>
+		<PaymentDetails 
+			formValues={formValues}
+			activeTheme={activeTheme}
+			handleFormValueChange={handleFormValueChange}
+		/>
+		<MonthlyPayment />
 	</StyledMortgageCalculator>
 };
 

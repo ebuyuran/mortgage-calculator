@@ -1,91 +1,89 @@
 import { Component } from 'react';
 import styled from 'styled-components';
-import { ThemeTypes, FormValues } from '../types';
+import { ThemeTypes, FormValues, FormFields } from '../types';
 import Slider from 'react-input-slider';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
-import { getMinimumDownPaymentPercentage } from '../helpers';
 
 const StyledPaymentDetails = styled.div`
 	width: 100%;
+
+	.styledbuttons {
+		display: inline-block;
+		padding: 5px 10px;
+		font-size: 1.5em;
+		background: tomato;
+		color: white;
+		margin-right: 10px;
+		cursor: pointer;
+	}
 `;
 
 type PaymentDetailProps = {
 	activeTheme: ThemeTypes;
-	initialFormValues: FormValues;
+	formValues: FormValues;
+	handleFormValueChange: (field: FormFields, value: number) => void;
 }
 
-type PaymentDetailState = FormValues;
-
-class PaymentDetails extends Component<PaymentDetailProps, PaymentDetailState> {
-	constructor(props: PaymentDetailProps) {
-		super(props);
-		const initial = this.props.initialFormValues;
-
-		this.state = {
-			propertyValue: initial.propertyValue,
-			downPaymentAmount: initial.downPaymentAmount,
-			downPaymentPercentage: initial.downPaymentPercentage,
-			downPaymentPercentageMin: initial.downPaymentPercentageMin,
-			downPaymentPercentageMax: initial.downPaymentPercentageMax,
-			loanTermInMonths: initial.loanTermInMonths,
-			interestRatePerYear: initial.interestRatePerYear
-		};
-
-		this.handlePropertyValueChange = this.handlePropertyValueChange.bind(this);
-		this.handleDownPaymentAmountChange = this.handleDownPaymentAmountChange.bind(this);
-	}
-
-	handlePropertyValueChange(values: NumberFormatValues) {
-		const newPropertyValue = Number(values.value);
-		const minimumDownPaymentPercentage = 
-			getMinimumDownPaymentPercentage(newPropertyValue);
-
-		if (this.state.downPaymentPercentageMin === minimumDownPaymentPercentage) {
-			this.setState({
-				propertyValue: newPropertyValue,
-				downPaymentAmount: newPropertyValue * (this.state.downPaymentPercentage / 100)
-			});
-		} else {
-			// Reset Down Payment Percentage to minimum when minimum percentage changes.
-			this.setState({
-				propertyValue: newPropertyValue,
-				downPaymentPercentageMin: minimumDownPaymentPercentage,
-				downPaymentPercentage: minimumDownPaymentPercentage,
-				downPaymentAmount: newPropertyValue * (minimumDownPaymentPercentage / 100)
-			});
-		}
-  }
-
-	handleDownPaymentAmountChange(e: {x: number}) {
-		const updatedDownPaymentAmount = 
-		Math.round(this.state.propertyValue * (this.state.downPaymentPercentage / 100))
-		this.setState({
-			downPaymentPercentage: e.x,
-			downPaymentAmount: updatedDownPaymentAmount
-		});
-	}
-
+class PaymentDetails extends Component<PaymentDetailProps> {
 	render() {
 		return <StyledPaymentDetails>
 			<h2>Property Value</h2>
 			<NumberFormat 
-				value={this.state.propertyValue} 
+				value={this.props.formValues.propertyValue} 
+				allowNegative={false}
 				thousandSeparator={true} 
-				onValueChange={this.handlePropertyValueChange}
+				onValueChange={(values: NumberFormatValues) => {
+					this.props.handleFormValueChange('propertyValue', Number(values.value));
+				}}
+			/>
+			<NumberFormat 
+				value={this.props.formValues.propertyValue} 
+				allowNegative={false}
+				thousandSeparator={true} 
+				displayType={'text'}
 			/>
 			<div style={{ marginTop: 20, fontSize: 15 }}>
 				{`down_payment Amount: `}
-				<NumberFormat value={this.state.downPaymentAmount} displayType={'text'} thousandSeparator={true} />
+				<NumberFormat 
+					value={this.props.formValues.downPaymentAmount} 
+					displayType={'text'} 
+					thousandSeparator={true} 
+					decimalScale={1}
+				/>
 			</div>
 			<div style={{ marginTop: 20, fontSize: 15 }}>
-				{`down_payment Percentage: ${this.state.downPaymentPercentage}%`}
+				{`down_payment Percentage: ${this.props.formValues.downPaymentPercentage}%`}
 			</div>
 			<div style={{ marginTop: 20 }}>
 				<Slider 
-					xmin={this.state.downPaymentPercentageMin} 
-					xmax={this.state.downPaymentPercentageMax}
-					x={this.state.downPaymentPercentage}
-					onChange={this.handleDownPaymentAmountChange}
+					xmin={this.props.formValues.minimumDownPaymentPercentage} 
+					xmax={this.props.formValues.maximumDownPaymentPercentage}
+					x={this.props.formValues.downPaymentPercentage}
+					onChange={(e) => {
+						this.props.handleFormValueChange('downPaymentPercentage', e.x);
+					}}
+				/>
+			</div>
+			<div>
+				<h2>Loan Term</h2>
+				<div onClick={(e) => { this.props.handleFormValueChange('loanTerm', 5) }} className={'styledbuttons'}>5</div>
+				<div onClick={(e) => { this.props.handleFormValueChange('loanTerm', 10) }} className={'styledbuttons'}>10</div>
+				<div onClick={(e) => { this.props.handleFormValueChange('loanTerm', 15) }} className={'styledbuttons'}>15</div>
+				<div onClick={(e) => { this.props.handleFormValueChange('loanTerm', 20) }} className={'styledbuttons'}>20</div>
+				<div onClick={(e) => { this.props.handleFormValueChange('loanTerm', 25) }} className={'styledbuttons'}>25</div>
+			</div>
+			<div>
+				<h2>Interest Rate</h2>
+				{this.props.formValues.interestRateErrorMessage ? <div>Must be between 1.00 and 9.55</div> : null}
+				<NumberFormat 
+					value={this.props.formValues.interestRatePerYear} 
+					thousandSeparator={true} 
+					allowNegative={false}
+					decimalScale={2}
+					fixedDecimalScale={true}
+					onValueChange={(values) => {
+						this.props.handleFormValueChange('interestRate', Number(values.value));
+					}}
 				/>
 			</div>
 		</StyledPaymentDetails>
