@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import styled from 'styled-components';
 import { ThemeTypes, FormValues, FormFields } from '../types';
 import Slider from 'react-input-slider';
@@ -24,70 +23,69 @@ type PaymentDetailProps = {
 	handleFormValueChange: (field: FormFields, value: number) => void;
 }
 
-class PaymentDetails extends Component<PaymentDetailProps> {
-	render() {
-		return <StyledPaymentDetails>
+export default function PaymentDetails(props: PaymentDetailProps) {
+	return (
+		<StyledPaymentDetails>
 			<h2>Property Value</h2>
 			<NumberFormat 
-				value={this.props.formValues.propertyValue} 
+				value={props.formValues.propertyValue} 
 				allowNegative={false}
 				thousandSeparator={true} 
 				onValueChange={(values: NumberFormatValues) => {
-					this.props.handleFormValueChange('propertyValue', Number(values.value));
+					props.handleFormValueChange('propertyValue', Number(values.value));
 				}}
 			/>
 			<NumberFormat 
-				value={this.props.formValues.propertyValue} 
+				value={props.formValues.propertyValue} 
+				displayType={'text'}
 				allowNegative={false}
 				thousandSeparator={true} 
-				displayType={'text'}
+				decimalScale={2}
 			/>
 			<div style={{ marginTop: 20, fontSize: 15 }}>
 				{`down_payment Amount: `}
 				<NumberFormat 
-					value={this.props.formValues.downPaymentAmount} 
+					value={props.formValues.downPaymentAmount} 
 					displayType={'text'} 
 					thousandSeparator={true} 
 					decimalScale={1}
 				/>
 			</div>
 			<div style={{ marginTop: 20, fontSize: 15 }}>
-				{`down_payment Percentage: ${this.props.formValues.downPaymentPercentage}%`}
+				{`down_payment Percentage: ${props.formValues.downPaymentPercentage}%`}
 			</div>
 			<div style={{ marginTop: 20 }}>
 				<Slider 
-					xmin={this.props.formValues.minimumDownPaymentPercentage} 
-					xmax={this.props.formValues.maximumDownPaymentPercentage}
-					x={this.props.formValues.downPaymentPercentage}
+					xmin={props.formValues.minimumDownPaymentPercentage} 
+					xmax={props.formValues.maximumDownPaymentPercentage}
+					x={props.formValues.downPaymentPercentage}
 					onChange={(e) => {
-						this.props.handleFormValueChange('downPaymentPercentage', e.x);
+						props.handleFormValueChange('downPaymentPercentage', e.x);
 					}}
 				/>
 			</div>
 			<div>
 				<h2>Loan Term</h2>
-				<div onClick={(e) => { this.props.handleFormValueChange('loanTerm', 5) }} className={'styledbuttons'}>5</div>
-				<div onClick={(e) => { this.props.handleFormValueChange('loanTerm', 10) }} className={'styledbuttons'}>10</div>
-				<div onClick={(e) => { this.props.handleFormValueChange('loanTerm', 15) }} className={'styledbuttons'}>15</div>
-				<div onClick={(e) => { this.props.handleFormValueChange('loanTerm', 20) }} className={'styledbuttons'}>20</div>
-				<div onClick={(e) => { this.props.handleFormValueChange('loanTerm', 25) }} className={'styledbuttons'}>25</div>
+				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 5) }} className={'styledbuttons'}>5</div>
+				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 10) }} className={'styledbuttons'}>10</div>
+				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 15) }} className={'styledbuttons'}>15</div>
+				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 20) }} className={'styledbuttons'}>20</div>
+				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 25) }} className={'styledbuttons'}>25</div>
 			</div>
 			<div>
 				<h2>Interest Rate</h2>
-				{this.props.formValues.interestRateErrorMessage ? <div>Must be between 1.00 and 9.55</div> : null}
+				{props.formValues.interestRateErrorMessage ? <div>Must be between 1.00 and 9.55</div> : null}
 				<NumberFormat 
-					value={this.props.formValues.interestRatePerYear} 
+					value={props.formValues.interestRatePerYear} 
 					thousandSeparator={true} 
 					allowNegative={false}
 					decimalScale={2}
 					fixedDecimalScale={true}
 					onValueChange={(values) => {
-						this.props.handleFormValueChange('interestRate', Number(values.value));
+						props.handleFormValueChange('interestRate', Number(values.value));
 					}}
 				/>
 			</div>
 		</StyledPaymentDetails>
-	}
+	)
 };
-
-export default PaymentDetails;

@@ -2,10 +2,11 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import PaymentDetails from './PaymentDetails/PaymentDetails';
 import MonthlyPayment from './MonthlyPayment/MonthlyPayment';
+import SaveButton from './SaveButton/SaveButton';
 import { 
 	getMinimumDownPaymentPercentage, 
 	downPaymentPercentageLimit,
-	highMinimumDownPaymentPercentage
+	minimumDownPaymentPercentageHigh
 } from './helpers';
 import { ThemeTypes, FormValues, FormFields } from './types';
 import { theme } from './theme';
@@ -21,7 +22,7 @@ const StyledMortgageCalculator = styled.div`
 	background: ${props => props.theme.background};
 `;
 
-function MortgageCalculator(props: MortgageCalculatorProps) {
+export default function MortgageCalculator(props: MortgageCalculatorProps) {
 	const [activeTheme] = useState<ThemeTypes>('light');
 	const [formValues, setFormValues] = useState<FormValues>(props.initialValues);
 
@@ -47,7 +48,7 @@ function MortgageCalculator(props: MortgageCalculatorProps) {
 					if (
 						// When new propert value is over down payment percentage limit,
 						updated.propertyValue >= downPaymentPercentageLimit &&
-						current.downPaymentPercentage < highMinimumDownPaymentPercentage
+						current.downPaymentPercentage < minimumDownPaymentPercentageHigh
 					) {
 						// set the new minimum percentage to updated minimum limit.
 						updated.downPaymentPercentage = updated.minimumDownPaymentPercentage;
@@ -77,21 +78,27 @@ function MortgageCalculator(props: MortgageCalculatorProps) {
 
 			case 'interestRate':
 				updated.interestRatePerYear = newValue;
-				updated.interestRateErrorMessage = newValue < 1.00 || newValue > 9.55;
+				updated.interestRateErrorMessage = (newValue < 1.00 || newValue > 9.55);
 				break;
 		}
 		
 		setFormValues(updated);
 	}
 
-	return <StyledMortgageCalculator theme={theme[activeTheme]}>
-		<PaymentDetails 
-			formValues={formValues}
-			activeTheme={activeTheme}
-			handleFormValueChange={handleFormValueChange}
-		/>
-		<MonthlyPayment />
-	</StyledMortgageCalculator>
+	return (
+		<StyledMortgageCalculator theme={theme[activeTheme]}>
+			<PaymentDetails 
+				activeTheme={activeTheme}
+				formValues={formValues}
+				handleFormValueChange={handleFormValueChange}
+			/>
+			<MonthlyPayment 
+				activeTheme={activeTheme}
+				formValues={formValues}
+			/>
+			<SaveButton
+				formValues={formValues}
+			/>
+		</StyledMortgageCalculator>
+	)
 };
-
-export default MortgageCalculator;
