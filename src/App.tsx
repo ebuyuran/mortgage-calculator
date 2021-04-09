@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 import { CookiesProvider, useCookies } from 'react-cookie';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import MortgageCalculator from './MortgageCalculator/MortgageCalculator';
 import { getMinimumDownPaymentPercentage } from './MortgageCalculator/helpers';
 import { FormValues } from './MortgageCalculator/types';
+import { themes } from './MortgageCalculator/theme';
+import { Spinner } from './Spinner/Spinner';
 
 const StyledApp = styled.div`
-  width: 48em;
+  width: 36em;
   border-radius: .3em;
+	background: ${props => props.theme.background};
+  min-height: 56em;
 `;
 
 function getDownPaymentPercentageFromInitialValues(
@@ -87,7 +91,11 @@ function App() {
   }
 
   if (initialFormValues === null) {
-    return <div>spinner</div>
+    return (
+      <StyledApp>
+        <Spinner />
+      </StyledApp>
+    )
   } else {
     return (
       <StyledApp>
@@ -100,7 +108,9 @@ function App() {
 export default function AppContainer() {
   return (
     <CookiesProvider>
-      <App />
+      <ThemeProvider theme={themes.light}>
+        <App />
+      </ThemeProvider>
     </CookiesProvider>
   )
 };

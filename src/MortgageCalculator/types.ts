@@ -5,6 +5,7 @@ type Colors = 'black' | 'white';
 export type ThemeInterface = {
 	[x in ThemeTypes]: {
 		background: Colors;
+		textColor: Colors;
 	};
 };
 

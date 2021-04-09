@@ -1,8 +1,7 @@
-import { FormValues, ThemeTypes } from '../types';
+import { FormValues } from '../types';
 import NumberFormat from 'react-number-format';
 
 type MonthlyPaymentProps = {
-	activeTheme: ThemeTypes;
 	formValues: FormValues;
 };
 

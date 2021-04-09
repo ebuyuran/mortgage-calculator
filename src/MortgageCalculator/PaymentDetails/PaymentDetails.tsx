@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ThemeTypes, FormValues, FormFields } from '../types';
+import { FormValues, FormFields } from '../types';
 import Slider from 'react-input-slider';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
 
@@ -22,7 +22,6 @@ const StyledPaymentDetails = styled.div`
 `;
 
 type PaymentDetailProps = {
-	activeTheme: ThemeTypes;
 	formValues: FormValues;
 	handleFormValueChange: (field: FormFields, value: number) => void;
 }

@@ -8,8 +8,7 @@ import {
 	downPaymentPercentageLimit,
 	minimumDownPaymentPercentageHigh
 } from './helpers';
-import { ThemeTypes, FormValues, FormFields } from './types';
-import { theme } from './theme';
+import { FormValues, FormFields } from './types';
 
 type MortgageCalculatorProps = {
 	initialValues: FormValues;
@@ -19,11 +18,9 @@ const StyledMortgageCalculator = styled.div`
 	min-height: 3em;
 	border-radius: .4em;
 	padding: 1.6em;
-	background: ${props => props.theme.background};
 `;
 
 export default function MortgageCalculator(props: MortgageCalculatorProps) {
-	const [activeTheme] = useState<ThemeTypes>('light');
 	const [formValues, setFormValues] = useState<FormValues>(props.initialValues);
 
 	function handleFormValueChange(field: FormFields, newValue: number) {
@@ -86,14 +83,12 @@ export default function MortgageCalculator(props: MortgageCalculatorProps) {
 	}
 
 	return (
-		<StyledMortgageCalculator theme={theme[activeTheme]}>
+		<StyledMortgageCalculator>
 			<PaymentDetails 
-				activeTheme={activeTheme}
 				formValues={formValues}
 				handleFormValueChange={handleFormValueChange}
 			/>
 			<MonthlyPayment 
-				activeTheme={activeTheme}
 				formValues={formValues}
 			/>
 			<SaveButton
