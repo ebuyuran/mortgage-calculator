@@ -14,6 +14,10 @@ const StyledPaymentDetails = styled.div`
 		color: white;
 		margin-right: 10px;
 		cursor: pointer;
+
+		&.active {
+			background: black;
+		}
 	}
 `;
 
@@ -24,6 +28,10 @@ type PaymentDetailProps = {
 }
 
 export default function PaymentDetails(props: PaymentDetailProps) {
+	function checkActiveLoanBtn(loan: number) {
+		return props.formValues.loanTermInMonths / 12 === loan ? 'active' : '';
+	}
+
 	return (
 		<StyledPaymentDetails>
 			<h2>Property Value</h2>
@@ -66,11 +74,11 @@ export default function PaymentDetails(props: PaymentDetailProps) {
 			</div>
 			<div>
 				<h2>Loan Term</h2>
-				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 5) }} className={'styledbuttons'}>5</div>
-				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 10) }} className={'styledbuttons'}>10</div>
-				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 15) }} className={'styledbuttons'}>15</div>
-				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 20) }} className={'styledbuttons'}>20</div>
-				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 25) }} className={'styledbuttons'}>25</div>
+				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 5) }} className={`styledbuttons ${checkActiveLoanBtn(5)}`}>5</div>
+				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 10) }} className={`styledbuttons ${checkActiveLoanBtn(10)}`}>10</div>
+				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 15) }} className={`styledbuttons ${checkActiveLoanBtn(15)}`}>15</div>
+				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 20) }} className={`styledbuttons ${checkActiveLoanBtn(20)}`}>20</div>
+				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 25) }} className={`styledbuttons ${checkActiveLoanBtn(25)}`}>25</div>
 			</div>
 			<div>
 				<h2>Interest Rate</h2>
