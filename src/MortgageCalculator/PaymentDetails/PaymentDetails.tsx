@@ -6,6 +6,48 @@ import NumberFormat, { NumberFormatValues } from 'react-number-format';
 const StyledPaymentDetails = styled.div`
 	width: 100%;
 
+	h1 {
+		font-size: 1.8em;
+		margin: .5 0 1.5em;
+	}
+
+	.input-container {
+		position: relative;
+
+		.currency {
+			position: absolute;
+			top: 50%; transform: translateY(-50%);
+			right: 1em;
+			font-size: 1.6em;
+			pointer-events: none;
+		}
+
+		input {
+			font-size: 1.6em;
+			width: 100%;
+			height: 100%;
+			background: none;
+			padding: .7em 4em .7em .6em;
+			border: .1em solid black;
+		}
+	}
+
+	.down-payment-info {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		margin: 2em 0;
+
+		.down-payment-percentage {
+			text-align: right;
+		}
+
+		.text-size {
+			font-size: 1.6em;
+		}
+	}
+
 	.styledbuttons {
 		display: inline-block;
 		padding: 5px 10px;
@@ -33,35 +75,40 @@ export default function PaymentDetails(props: PaymentDetailProps) {
 
 	return (
 		<StyledPaymentDetails>
-			<h2>Property Value</h2>
-			<NumberFormat 
-				value={props.formValues.propertyValue} 
-				allowNegative={false}
-				thousandSeparator={true} 
-				onValueChange={(values: NumberFormatValues) => {
-					props.handleFormValueChange('propertyValue', Number(values.value));
-				}}
-			/>
-			<NumberFormat 
-				value={props.formValues.propertyValue} 
-				displayType={'text'}
-				allowNegative={false}
-				thousandSeparator={true} 
-				decimalScale={2}
-			/>
-			<div style={{ marginTop: 20, fontSize: 15 }}>
-				{`down_payment Amount: `}
+			<h1>Property Value</h1>
+			<div className={'input-container'}>
 				<NumberFormat 
-					value={props.formValues.downPaymentAmount} 
-					displayType={'text'} 
-					thousandSeparator={true} 
-					decimalScale={1}
+					value={props.formValues.propertyValue} 
+					allowNegative={false}
+					thousandSeparator={true}
+					decimalScale={0}
+					onValueChange={(values: NumberFormatValues) => {
+						props.handleFormValueChange('propertyValue', Number(values.value));
+					}}
 				/>
+				<div className={'currency'}>AED</div>
 			</div>
-			<div style={{ marginTop: 20, fontSize: 15 }}>
-				{`down_payment Percentage: ${props.formValues.downPaymentPercentage}%`}
+
+			<div className={'down-payment-info'}>
+				<div>
+					<span className={'text-size'}>
+						<div>Down Payment Amount:</div>
+						<div>
+							<NumberFormat 
+								value={props.formValues.downPaymentAmount} 
+								displayType={'text'} 
+								thousandSeparator={true} 
+								decimalScale={1}
+							/>
+						</div>
+					</span>
+				</div>
+				<div className={'down-payment-percentage'}>
+					<span className={'text-size'}>{`${props.formValues.downPaymentPercentage}%`}</span>
+					</div>
 			</div>
-			<div style={{ marginTop: 20 }}>
+
+			<div className={'down-payment-slider'}>
 				<Slider 
 					xmin={props.formValues.minimumDownPaymentPercentage} 
 					xmax={props.formValues.maximumDownPaymentPercentage}
@@ -69,8 +116,24 @@ export default function PaymentDetails(props: PaymentDetailProps) {
 					onChange={(e) => {
 						props.handleFormValueChange('downPaymentPercentage', e.x);
 					}}
+					styles={{
+						track: {
+							width: '100%',
+							height: '.3em'
+						},
+						active: {
+						},
+						thumb: {
+							width: '2em',
+							height: '2em',
+							backgroundColor: 'green'
+						}
+					}}
 				/>
 			</div>
+
+
+
 			<div>
 				<h2>Loan Term</h2>
 				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 5) }} className={`styledbuttons ${checkActiveLoanBtn(5)}`}>5</div>

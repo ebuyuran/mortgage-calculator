@@ -15,9 +15,8 @@ type MortgageCalculatorProps = {
 }
 
 const StyledMortgageCalculator = styled.div`
-	min-height: 3em;
 	border-radius: .4em;
-	padding: 1.6em;
+	padding: 2em;
 `;
 
 export default function MortgageCalculator(props: MortgageCalculatorProps) {

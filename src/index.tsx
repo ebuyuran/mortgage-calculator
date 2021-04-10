@@ -13,6 +13,11 @@ const GlobalStyles = createGlobalStyle`
     background: silver;
     font-family: Open-Sans, Helvetica, Sans-Serif;
     font-size: 10px;
+    box-sizing: border-box;
+    
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
   }
 
   #root {
