@@ -1,11 +1,13 @@
 export type ThemeTypes = 'light' | 'dark';
 
-type Colors = 'black' | 'white';
+type Colors = 'black' | 'white' | 'tomato' | 'darkslategray' | '#ddd' | '#c48c82' | 'silver';
 
 export type ThemeInterface = {
 	[x in ThemeTypes]: {
 		background: Colors;
-		textColor: Colors;
+		textColor: Colors[];
+		primaryColor: Colors[];
+		secondaryColor: Colors[];
 	};
 };
 

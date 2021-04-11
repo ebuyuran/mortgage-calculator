@@ -15,7 +15,7 @@ export function Spinner() {
 			width: 1.3em;
 			height: 1.3em;
 			border-radius: 50%;
-			background: ${props => props.theme.textColor};
+			background: ${props => props.theme.primaryColor[0]};
 			animation-timing-function: cubic-bezier(0, 1, 1, 0);
 
 			&:nth-child(1) {

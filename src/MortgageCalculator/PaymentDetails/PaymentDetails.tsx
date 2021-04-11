@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import { useContext } from 'react';
+import styled, { ThemeContext } from 'styled-components';
 import { FormValues, FormFields } from '../types';
 import Slider from 'react-input-slider';
 import NumberFormat, { NumberFormatValues } from 'react-number-format';
@@ -7,12 +8,21 @@ const StyledPaymentDetails = styled.div`
 	width: 100%;
 
 	h1 {
+		font-size: 2em;
+		text-align: center;
+		margin: .5em 0 1em;
+		padding: 0 0 .5em;
+		border-bottom: .05em solid ${props => props.theme.secondaryColor[1]};
+	}
+
+	h2 {
 		font-size: 1.8em;
-		margin: .5 0 1.5em;
+		margin: 0;
 	}
 
 	.input-container {
 		position: relative;
+		margin: 1em 0 2.4em;
 
 		.currency {
 			position: absolute;
@@ -37,28 +47,61 @@ const StyledPaymentDetails = styled.div`
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
-		margin: 2em 0;
-
-		.down-payment-percentage {
-			text-align: right;
-		}
+		margin: 1em 0 1em;
 
 		.text-size {
 			font-size: 1.6em;
 		}
 	}
 
-	.styledbuttons {
-		display: inline-block;
-		padding: 5px 10px;
-		font-size: 1.5em;
-		background: tomato;
-		color: white;
-		margin-right: 10px;
-		cursor: pointer;
+	.down-payment-slider {
+		margin: 0 0 2.4em 0;
+	}
 
-		&.active {
-			background: black;
+	.loan-term {
+		display: flex;
+		justify-content: space-between;
+		margin: 1em 0 2.4em;
+		padding: 0 4em;
+
+		div {
+			position: relative;
+			display: inline-block;
+			width: 4em;
+			height: 4em;
+			border-radius: 2.5em;
+			background: ${props => props.theme.secondaryColor[1]};
+			color: ${props => props.theme.textColor[1]};
+			cursor: pointer;
+
+			span {
+				position: absolute;
+				top: 50%; left: 50%;
+				transform: translate(-50%, -50%);
+				font-size: 1.8em;
+			}
+	
+			&.active {
+				background: ${props => props.theme.primaryColor[0]};
+			}
+		}
+	}
+
+	.interest-error {
+		width: 100%;
+		text-align: center;
+
+		position: absolute;
+		top: 4.6em; left: 50%;
+		transform: translateX(-50%);
+
+		color: ${props => props.theme.textColor[1]};
+		background: ${props => props.theme.primaryColor[0]};
+		padding: .5em 1em;
+		border-radius: 5em;
+
+		span {
+			font-size: 1.4em;
 		}
 	}
 `;
@@ -69,13 +112,16 @@ type PaymentDetailProps = {
 }
 
 export default function PaymentDetails(props: PaymentDetailProps) {
+	const themeContext = useContext(ThemeContext);
+
 	function checkActiveLoanBtn(loan: number) {
 		return props.formValues.loanTermInMonths / 12 === loan ? 'active' : '';
 	}
 
 	return (
 		<StyledPaymentDetails>
-			<h1>Property Value</h1>
+			<h1>Mortgage Calculator</h1>
+			<h2>Property Value</h2>
 			<div className={'input-container'}>
 				<NumberFormat 
 					value={props.formValues.propertyValue} 
@@ -89,23 +135,22 @@ export default function PaymentDetails(props: PaymentDetailProps) {
 				<div className={'currency'}>AED</div>
 			</div>
 
+			<h2>Down Payment Amount:</h2>
 			<div className={'down-payment-info'}>
 				<div>
 					<span className={'text-size'}>
-						<div>Down Payment Amount:</div>
-						<div>
-							<NumberFormat 
-								value={props.formValues.downPaymentAmount} 
-								displayType={'text'} 
-								thousandSeparator={true} 
-								decimalScale={1}
-							/>
-						</div>
+						<NumberFormat 
+							value={props.formValues.downPaymentAmount} 
+							displayType={'text'} 
+							thousandSeparator={true} 
+							decimalScale={1}
+						/>
+						<span>{' AED'}</span>
 					</span>
 				</div>
 				<div className={'down-payment-percentage'}>
 					<span className={'text-size'}>{`${props.formValues.downPaymentPercentage}%`}</span>
-					</div>
+				</div>
 			</div>
 
 			<div className={'down-payment-slider'}>
@@ -119,32 +164,63 @@ export default function PaymentDetails(props: PaymentDetailProps) {
 					styles={{
 						track: {
 							width: '100%',
-							height: '.3em'
+							height: '.3em',
+							background: themeContext.secondaryColor[0]
 						},
 						active: {
+							background: themeContext.primaryColor[0]
 						},
 						thumb: {
 							width: '2em',
 							height: '2em',
-							backgroundColor: 'green'
+							backgroundColor: themeContext.primaryColor[0]
 						}
 					}}
 				/>
 			</div>
 
-
-
-			<div>
-				<h2>Loan Term</h2>
-				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 5) }} className={`styledbuttons ${checkActiveLoanBtn(5)}`}>5</div>
-				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 10) }} className={`styledbuttons ${checkActiveLoanBtn(10)}`}>10</div>
-				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 15) }} className={`styledbuttons ${checkActiveLoanBtn(15)}`}>15</div>
-				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 20) }} className={`styledbuttons ${checkActiveLoanBtn(20)}`}>20</div>
-				<div onClick={(e) => { props.handleFormValueChange('loanTerm', 25) }} className={`styledbuttons ${checkActiveLoanBtn(25)}`}>25</div>
+			<h2>Loan Term</h2>
+			<div className={'loan-term'}>
+				<div 
+					onClick={(e) => { props.handleFormValueChange('loanTerm', 5) }}
+					className={checkActiveLoanBtn(5)}
+				>
+					<span>5</span>
+				</div>
+				<div 
+					onClick={(e) => { props.handleFormValueChange('loanTerm', 10) }}
+					className={checkActiveLoanBtn(10)}
+				>
+					<span>10</span>
+				</div>
+				<div 
+					onClick={(e) => { props.handleFormValueChange('loanTerm', 15) }}
+					className={checkActiveLoanBtn(15)}
+				>
+					<span>15</span>
+				</div>
+				<div 
+					onClick={(e) => { props.handleFormValueChange('loanTerm', 20) }}
+					className={checkActiveLoanBtn(20)}
+				>
+					<span>20</span>
+				</div>
+				<div 
+					onClick={(e) => { props.handleFormValueChange('loanTerm', 25) }}
+					className={checkActiveLoanBtn(25)}
+				>
+					<span>25</span>
+				</div>
 			</div>
-			<div>
-				<h2>Interest Rate</h2>
-				{props.formValues.interestRateErrorMessage ? <div>Must be between 1.00 and 9.55</div> : null}
+			
+			<h2>Interest Rate</h2>
+			<div className={'input-container'}>
+				{
+					props.formValues.interestRateErrorMessage ? 
+						<div className={'interest-error'}>
+							<span>Interest rate must be between 1.00 and 9.55</span>
+						</div> : null
+				}
 				<NumberFormat 
 					value={props.formValues.interestRatePerYear} 
 					thousandSeparator={true} 
