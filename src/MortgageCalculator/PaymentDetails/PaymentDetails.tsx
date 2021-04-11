@@ -73,6 +73,7 @@ const StyledPaymentDetails = styled.div`
 			background: ${props => props.theme.secondaryColor[1]};
 			color: ${props => props.theme.textColor[1]};
 			cursor: pointer;
+			user-select: none;
 
 			span {
 				position: absolute;

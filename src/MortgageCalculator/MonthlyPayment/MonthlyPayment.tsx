@@ -1,9 +1,31 @@
-import { FormValues } from '../types';
+import styled from 'styled-components';
 import NumberFormat from 'react-number-format';
+import { FormValues } from '../types';
 
 type MonthlyPaymentProps = {
 	formValues: FormValues;
 };
+
+const StyledMonthlyPayment = styled.div`
+	.container {
+		
+		.payment-amount {
+			font-size: 3em;
+			font-weight: bold;
+		}
+
+		.currency {
+			position: relative;
+			bottom: 1.1em; left: .25em;
+			font-size: 1.2em;
+		}
+
+		.payment-periods {
+			font-size: 1.2em;
+			padding: .3em 0 0;
+		}
+	}
+`;
 
 function calculatePaymentBasedOnLoanAmount(loanAmount: number, loanTerm: number, interestRate: number): number {
 	const interestRatePerMonth = interestRate / 100 / 12;
@@ -22,21 +44,29 @@ function calculatePaymentBasedOnLoanAmount(loanAmount: number, loanTerm: number,
 
 export default function MonthlyPayment(props: MonthlyPaymentProps) {
 	if (props.formValues.interestRateErrorMessage) {
-		return <span>Error</span>
+		return <div />
 	} else {
-		return <div style={{ marginTop: 50, fontSize: 30}}>
-			{'monthly loan: '}
-			<NumberFormat
-				value={calculatePaymentBasedOnLoanAmount(
-					props.formValues.propertyValue,
-					props.formValues.loanTermInMonths,
-					props.formValues.interestRatePerYear,
-				)} 
-				displayType={'text'}
-				allowNegative={false}
-				thousandSeparator={true} 
-				decimalScale={2}
-			/>
-		</div>
+		return (
+			<StyledMonthlyPayment>
+				<div className={'container'}>
+					<span className={'payment-amount'}>
+						<NumberFormat
+							value={calculatePaymentBasedOnLoanAmount(
+								props.formValues.propertyValue,
+								props.formValues.loanTermInMonths,
+								props.formValues.interestRatePerYear,
+							)} 
+							displayType={'text'}
+							allowNegative={false}
+							thousandSeparator={true} 
+							decimalScale={2}
+							
+						/>
+					</span>
+					<span className={'currency'}>AED</span>
+					<div className={'payment-periods'}>per month</div>
+				</div>
+			</StyledMonthlyPayment>
+		)
 	}
 };

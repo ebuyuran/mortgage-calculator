@@ -10,7 +10,7 @@ import { Spinner } from './Spinner/Spinner';
 
 const StyledApp = styled.div`
   width: 36em;
-  border-radius: .3em;
+  border-radius: .8em;
 	background: ${props => props.theme.background};
   min-height: 56em;
 `;

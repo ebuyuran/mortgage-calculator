@@ -17,6 +17,12 @@ type MortgageCalculatorProps = {
 const StyledMortgageCalculator = styled.div`
 	border-radius: .4em;
 	padding: 2em;
+
+	.footer-container {
+		display: flex;
+		justify-content: space-between;
+		margin: 3em 0 0 0;
+	}
 `;
 
 export default function MortgageCalculator(props: MortgageCalculatorProps) {
@@ -87,12 +93,15 @@ export default function MortgageCalculator(props: MortgageCalculatorProps) {
 				formValues={formValues}
 				handleFormValueChange={handleFormValueChange}
 			/>
-			<MonthlyPayment 
-				formValues={formValues}
-			/>
-			<SaveButton
-				formValues={formValues}
-			/>
+			<div className={'footer-container'}>
+				<MonthlyPayment 
+					formValues={formValues}
+				/>
+				<SaveButton
+					formValues={formValues}
+				/>
+			</div>
+
 		</StyledMortgageCalculator>
 	)
 };
