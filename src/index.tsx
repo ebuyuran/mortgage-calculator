@@ -24,6 +24,8 @@ const GlobalStyles = createGlobalStyle`
     display: flex;
     justify-content: center;
     align-items: center;
+
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
   }
 `;
 

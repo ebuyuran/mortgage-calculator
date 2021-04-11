@@ -23,13 +23,17 @@ export default function SaveButton(props: {formValues: FormValues}) {
 		}
 	`;
 
-	return (
-		<StyledSaveButton
-			onClick={() => {
-				setCookie('mortgage-calculator', props.formValues, { path: '/' });
-			}}
-		>
-			<span>SAVE</span>
-		</StyledSaveButton>
-	)
+	if (props.formValues.interestRateErrorMessage) {
+		return null;
+	} else {
+		return (
+			<StyledSaveButton
+				onClick={() => {
+					setCookie('mortgage-calculator', props.formValues, { path: '/' });
+				}}
+			>
+				<span>SAVE</span>
+			</StyledSaveButton>
+		);
+	}
 };

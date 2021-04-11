@@ -8,21 +8,26 @@ type MonthlyPaymentProps = {
 
 const StyledMonthlyPayment = styled.div`
 	.container {
-		
-		.payment-amount {
-			font-size: 3em;
-			font-weight: bold;
-		}
+		color: ${props => props.theme.textColor[0]};
 
-		.currency {
+		.payment-amount-wrapper {
 			position: relative;
-			bottom: 1.1em; left: .25em;
-			font-size: 1.2em;
-		}
+			top: -.4em;
 
-		.payment-periods {
-			font-size: 1.2em;
-			padding: .3em 0 0;
+			.payment-amount {
+				font-size: 3em;
+				font-weight: bold;
+			}
+	
+			.currency {
+				position: relative;
+				bottom: 1em; left: .25em;
+				font-size: 1.2em;
+			}
+	
+			.payment-periods {
+				font-size: 1.2em;
+			}
 		}
 	}
 `;
@@ -44,27 +49,29 @@ function calculatePaymentBasedOnLoanAmount(loanAmount: number, loanTerm: number,
 
 export default function MonthlyPayment(props: MonthlyPaymentProps) {
 	if (props.formValues.interestRateErrorMessage) {
-		return <div />
+		return null
 	} else {
 		return (
 			<StyledMonthlyPayment>
 				<div className={'container'}>
-					<span className={'payment-amount'}>
-						<NumberFormat
-							value={calculatePaymentBasedOnLoanAmount(
-								props.formValues.propertyValue,
-								props.formValues.loanTermInMonths,
-								props.formValues.interestRatePerYear,
-							)} 
-							displayType={'text'}
-							allowNegative={false}
-							thousandSeparator={true} 
-							decimalScale={2}
-							
-						/>
-					</span>
-					<span className={'currency'}>AED</span>
-					<div className={'payment-periods'}>per month</div>
+					<div className={'payment-amount-wrapper'}>
+						<span className={'payment-amount'}>
+							<NumberFormat
+								value={calculatePaymentBasedOnLoanAmount(
+									props.formValues.propertyValue,
+									props.formValues.loanTermInMonths,
+									props.formValues.interestRatePerYear,
+								)} 
+								displayType={'text'}
+								allowNegative={false}
+								thousandSeparator={true} 
+								decimalScale={0}
+								
+							/>
+						</span>
+						<span className={'currency'}>AED</span>
+						<div className={'payment-periods'}>per month</div>
+					</div>
 				</div>
 			</StyledMonthlyPayment>
 		)

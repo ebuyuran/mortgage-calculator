@@ -6,23 +6,25 @@ import NumberFormat, { NumberFormatValues } from 'react-number-format';
 
 const StyledPaymentDetails = styled.div`
 	width: 100%;
+	color: ${props => props.theme.textColor[0]};
 
 	h1 {
 		font-size: 2em;
 		text-align: center;
-		margin: .5em 0 1em;
+		margin: .5em 0 1.25em;
 		padding: 0 0 .5em;
 		border-bottom: .05em solid ${props => props.theme.secondaryColor[1]};
 	}
 
 	h2 {
-		font-size: 1.8em;
+		font-size: 1.7em;
 		margin: 0;
 	}
 
 	.input-container {
 		position: relative;
-		margin: 1em 0 2.4em;
+		margin: .6em 0 2em;
+		background: ${props => props.theme.inputBackgroundColor};
 
 		.currency {
 			position: absolute;
@@ -38,7 +40,8 @@ const StyledPaymentDetails = styled.div`
 			height: 100%;
 			background: none;
 			padding: .7em 4em .7em .6em;
-			border: .1em solid black;
+			color: ${props => props.theme.textColor[0]};
+			border: .1em solid ${props => props.theme.inputBorderColor};
 		}
 	}
 
@@ -47,7 +50,7 @@ const StyledPaymentDetails = styled.div`
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
-		margin: 1em 0 1em;
+		margin: .6em 0;
 
 		.text-size {
 			font-size: 1.6em;
@@ -55,13 +58,13 @@ const StyledPaymentDetails = styled.div`
 	}
 
 	.down-payment-slider {
-		margin: 0 0 2.4em 0;
+		margin: 0 0 2em 0;
 	}
 
 	.loan-term {
 		display: flex;
 		justify-content: space-between;
-		margin: 1em 0 2.4em;
+		margin: 1em 0 2em;
 		padding: 0 4em;
 
 		div {
@@ -93,16 +96,15 @@ const StyledPaymentDetails = styled.div`
 		text-align: center;
 
 		position: absolute;
-		top: 4.6em; left: 50%;
+		top: 5em; left: 50%;
 		transform: translateX(-50%);
 
 		color: ${props => props.theme.textColor[1]};
-		background: ${props => props.theme.primaryColor[0]};
+		background: ${props => props.theme.errorColor};
 		padding: .5em 1em;
-		border-radius: 5em;
 
 		span {
-			font-size: 1.4em;
+			font-size: 1.2em;
 		}
 	}
 `;
@@ -132,6 +134,9 @@ export default function PaymentDetails(props: PaymentDetailProps) {
 					onValueChange={(values: NumberFormatValues) => {
 						props.handleFormValueChange('propertyValue', Number(values.value));
 					}}
+					isAllowed={(inputObj: NumberFormatValues) => {
+						return Number(inputObj.value) < 100000000;
+					}}
 				/>
 				<div className={'currency'}>AED</div>
 			</div>
@@ -144,7 +149,7 @@ export default function PaymentDetails(props: PaymentDetailProps) {
 							value={props.formValues.downPaymentAmount} 
 							displayType={'text'} 
 							thousandSeparator={true} 
-							decimalScale={1}
+							decimalScale={0}
 						/>
 						<span>{' AED'}</span>
 					</span>
@@ -219,7 +224,7 @@ export default function PaymentDetails(props: PaymentDetailProps) {
 				{
 					props.formValues.interestRateErrorMessage ? 
 						<div className={'interest-error'}>
-							<span>Interest rate must be between 1.00 and 9.55</span>
+							<span>Interest rate must be between 1.00% and 9.55%</span>
 						</div> : null
 				}
 				<NumberFormat 
@@ -228,6 +233,7 @@ export default function PaymentDetails(props: PaymentDetailProps) {
 					allowNegative={false}
 					decimalScale={2}
 					fixedDecimalScale={true}
+					suffix={'%'}
 					onValueChange={(values) => {
 						props.handleFormValueChange('interestRate', Number(values.value));
 					}}

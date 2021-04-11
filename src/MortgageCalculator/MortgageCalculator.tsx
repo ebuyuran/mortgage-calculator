@@ -21,7 +21,7 @@ const StyledMortgageCalculator = styled.div`
 	.footer-container {
 		display: flex;
 		justify-content: space-between;
-		margin: 3em 0 0 0;
+		margin: 2em 0 0 0;
 	}
 `;
 

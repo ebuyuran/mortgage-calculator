@@ -108,7 +108,7 @@ function App() {
 export default function AppContainer() {
   return (
     <CookiesProvider>
-      <ThemeProvider theme={themes.light}>
+      <ThemeProvider theme={themes.dark}>
         <App />
       </ThemeProvider>
     </CookiesProvider>
