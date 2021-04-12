@@ -95,19 +95,21 @@ function App() {
   } else {
     const App = initialFormValues === null ? 
       <Spinner /> : 
-      <MortgageCalculator initialValues={initialFormValues} />
+      <>
+        <div className={`theme-switcher ${activeTheme}`} onClick={switchTheme}>
+          <div className={'background'}>
+            <div className={'text'}>
+              <span>Dark Mode</span>
+            </div>
+            <div className={'handle'} />
+          </div>
+        </div>
+        <MortgageCalculator initialValues={initialFormValues} />
+      </>
   
     return (
       <StyledApp>
         <ThemeProvider theme={themes[activeTheme]}>
-          <div className={`theme-switcher ${activeTheme}`} onClick={switchTheme}>
-            <div className={'background'}>
-              <div className={'text'}>
-                <span>Dark Mode</span>
-              </div>
-              <div className={'handle'} />
-            </div>
-          </div>
           { App }
         </ThemeProvider>
       </StyledApp>

@@ -7,28 +7,23 @@ type MonthlyPaymentProps = {
 };
 
 const StyledMonthlyPayment = styled.div`
-	.container {
-		color: ${props => props.theme.textColor[0]};
+	color: ${props => props.theme.textColor[0]};
+	position: relative;
+	top: -.4em;
 
-		.payment-amount-wrapper {
-			position: relative;
-			top: -.4em;
+	.payment-amount {
+		font-size: 3em;
+		font-weight: bold;
+	}
 
-			.payment-amount {
-				font-size: 3em;
-				font-weight: bold;
-			}
-	
-			.currency {
-				position: relative;
-				bottom: 1em; left: .25em;
-				font-size: 1.2em;
-			}
-	
-			.payment-periods {
-				font-size: 1.2em;
-			}
-		}
+	.currency {
+		position: relative;
+		bottom: 1em; left: .25em;
+		font-size: 1.2em;
+	}
+
+	.payment-periods {
+		font-size: 1.2em;
 	}
 `;
 
@@ -53,26 +48,22 @@ export default function MonthlyPayment(props: MonthlyPaymentProps) {
 	} else {
 		return (
 			<StyledMonthlyPayment>
-				<div className={'container'}>
-					<div className={'payment-amount-wrapper'}>
-						<span className={'payment-amount'}>
-							<NumberFormat
-								value={calculatePaymentBasedOnLoanAmount(
-									props.formValues.propertyValue,
-									props.formValues.loanTermInMonths,
-									props.formValues.interestRatePerYear,
-								)} 
-								displayType={'text'}
-								allowNegative={false}
-								thousandSeparator={true} 
-								decimalScale={0}
-								
-							/>
-						</span>
-						<span className={'currency'}>AED</span>
-						<div className={'payment-periods'}>per month</div>
-					</div>
-				</div>
+				<span className={'payment-amount'}>
+					<NumberFormat
+						value={calculatePaymentBasedOnLoanAmount(
+							props.formValues.propertyValue,
+							props.formValues.loanTermInMonths,
+							props.formValues.interestRatePerYear,
+						)} 
+						displayType={'text'}
+						allowNegative={false}
+						thousandSeparator={true} 
+						decimalScale={0}
+						
+					/>
+				</span>
+				<span className={'currency'}>AED</span>
+				<div className={'payment-periods'}>per month</div>
 			</StyledMonthlyPayment>
 		)
 	}

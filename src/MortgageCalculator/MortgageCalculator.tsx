@@ -15,14 +15,15 @@ type MortgageCalculatorProps = {
 }
 
 const StyledMortgageCalculator = styled.div`
-	min-height: 56em;
+	border-radius: .8em;
+
 	padding: 2em;
 	background: ${props => props.theme.background};
 
 	.footer-container {
 		display: flex;
 		justify-content: space-between;
-		margin: 2em 0 0 0;
+		margin: 2em 0 1em;
 	}
 `;
 

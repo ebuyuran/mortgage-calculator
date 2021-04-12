@@ -2,9 +2,6 @@ import styled from 'styled-components';
 
 export function Spinner() {
 	const StyledSpinner = styled.div`
-		width: 36em;
-		min-height: 56em;
-		border-radius: .8em;
 		background: ${props => props.theme.background};
 
 		.lds-ellipsis {
@@ -74,13 +71,11 @@ export function Spinner() {
 
 	return (
 		<StyledSpinner>
-			<div className={'container'}>
-				<div className={'lds-ellipsis'}>
-					<div />
-					<div />
-					<div />
-					<div />
-				</div>
+			<div className={'lds-ellipsis'}>
+				<div />
+				<div />
+				<div />
+				<div />
 			</div>
 		</StyledSpinner>
 	)

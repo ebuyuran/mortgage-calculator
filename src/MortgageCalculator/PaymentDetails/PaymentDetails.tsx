@@ -67,7 +67,7 @@ export default function PaymentDetails(props: PaymentDetailProps) {
 						track: {
 							width: '100%',
 							height: '.3em',
-							background: themeContext.secondaryColor[0]
+							background: themeContext.secondaryColor[1]
 						},
 						active: {
 							background: themeContext.primaryColor[0]

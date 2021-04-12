@@ -3,7 +3,6 @@ import styled from 'styled-components';
 export const StyledApp = styled.div`
 width: 36em;
 border-radius: .8em;
-min-height: 56em;
 
 .theme-switcher {
 	float: right;
