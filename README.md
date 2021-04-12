@@ -31,13 +31,13 @@ To write component based CSS and theming.
 ## Basic Structure
 
 |-- __App.tsx__\
-|-- _Entry point that sets initial form values from a cookie_\
-|-- _or end-point with the theme-switcher._\
+|-- _# Entry point that sets initial form values from a cookie_\
+|-- _# or end-point with the theme-switcher._\
 |-- |-- __MortgageCalculator.tsx__\
-|-- |-- _Contains all the state handling logic in the form._\
+|-- |-- _# Contains all the state handling logic in the form._\
 |-- |-- |-- __PaymentDetails.tsx__\
-|-- |-- |-- _Renders form elements._\
+|-- |-- |-- _# Renders form elements._\
 |-- |-- |-- __MonthlyPayment.tsx__\
-|-- |-- |-- _Calculates and renders monthly payments._\
+|-- |-- |-- _# Calculates and renders monthly payments._\
 |-- |-- |-- __SaveButton.tsx__\
-|-- |-- |-- _Renders the Save Button and sets the cookies._
+|-- |-- |-- _# Renders the Save Button and sets the cookies._
