@@ -117,12 +117,6 @@ export default function PaymentDetails(props: PaymentDetailProps) {
 			
 			<h2>Interest Rate</h2>
 			<div className={'input-container'}>
-				{
-					props.formValues.interestRateErrorMessage ? 
-						<div className={'interest-error'}>
-							<span>Interest rate must be between 1.00% and 9.55%</span>
-						</div> : null
-				}
 				<NumberFormat 
 					value={props.formValues.interestRatePerYear} 
 					thousandSeparator={true} 
@@ -134,6 +128,12 @@ export default function PaymentDetails(props: PaymentDetailProps) {
 						props.handleFormValueChange('interestRate', Number(values.value));
 					}}
 				/>
+				{
+					props.formValues.interestRateErrorMessage ? 
+						<div className={'interest-error'}>
+							<span>Interest rate must be between 1.00% and 9.55%</span>
+						</div> : null
+				}
 			</div>
 		</StyledPaymentDetails>
 	)

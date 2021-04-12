@@ -91,13 +91,9 @@ export const StyledPaymentDetails = styled.div`
 		width: 100%;
 		text-align: center;
 
-		position: absolute;
-		top: 5em; left: 50%;
-		transform: translateX(-50%);
-
 		color: ${props => props.theme.textColor[1]};
 		background: ${props => props.theme.errorColor};
-		padding: .5em 1em;
+		padding: 1em;
 
 		span {
 			font-size: 1.2em;
