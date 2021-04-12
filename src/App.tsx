@@ -1,19 +1,13 @@
 import { useEffect, useState } from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'styled-components';
 import { CookiesProvider, useCookies } from 'react-cookie';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import MortgageCalculator from './MortgageCalculator/MortgageCalculator';
-import { getMinimumDownPaymentPercentage } from './MortgageCalculator/helpers';
-import { FormValues } from './MortgageCalculator/types';
-import { themes } from './MortgageCalculator/theme';
+import { getMinimumDownPaymentPercentage } from './helpers';
+import { FormValues, ThemeTypes } from './types';
+import { themes } from './theme';
 import { Spinner } from './Spinner/Spinner';
-
-const StyledApp = styled.div`
-  width: 36em;
-  border-radius: .8em;
-	background: ${props => props.theme.background};
-  min-height: 56em;
-`;
+import { StyledApp } from './StyledApp';
 
 function getDownPaymentPercentageFromInitialValues(
   propertyValue: number, 
@@ -47,6 +41,7 @@ type DefaultFormValues = {
 function App() {
   const [cookies] = useCookies(['mortgage-calculator']);
   const [initialFormValues, setInitialFormValues] = useState<FormValues | null>(null);
+  const [activeTheme, setActiveTheme] = useState<ThemeTypes>('light');
   const [serverError, setServerError] = useState<boolean>(false);
   const mortgageCookie: FormValues = cookies['mortgage-calculator'];
 
@@ -86,31 +81,44 @@ function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (serverError) {
-    return <div>server error</div>
+  function switchTheme() {
+    setActiveTheme(activeTheme === 'light' ? 'dark' : 'light');
   }
 
-  if (initialFormValues === null) {
+  if (serverError) {
     return (
-      <StyledApp>
-        <Spinner />
-      </StyledApp>
+      <div style={{ textAlign: 'center', fontSize: '1.5em'}}>
+        <h1>Server Error!</h1>
+        <p>Hello there 503. Please make yourself at home.</p>
+      </div>
     )
   } else {
+    const App = initialFormValues === null ? 
+      <Spinner /> : 
+      <MortgageCalculator initialValues={initialFormValues} />
+  
     return (
       <StyledApp>
-        <MortgageCalculator initialValues={initialFormValues} />
+        <ThemeProvider theme={themes[activeTheme]}>
+          <div className={`theme-switcher ${activeTheme}`} onClick={switchTheme}>
+            <div className={'background'}>
+              <div className={'text'}>
+                <span>Dark Mode</span>
+              </div>
+              <div className={'handle'} />
+            </div>
+          </div>
+          { App }
+        </ThemeProvider>
       </StyledApp>
-    );
+    )
   }
 }
 
 export default function AppContainer() {
   return (
     <CookiesProvider>
-      <ThemeProvider theme={themes.dark}>
-        <App />
-      </ThemeProvider>
+      <App />
     </CookiesProvider>
   )
 };

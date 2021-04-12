@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import NumberFormat from 'react-number-format';
-import { FormValues } from '../types';
+import { FormValues } from '../../types';
 
 type MonthlyPaymentProps = {
 	formValues: FormValues;

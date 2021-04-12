@@ -7,16 +7,17 @@ import {
 	getMinimumDownPaymentPercentage, 
 	downPaymentPercentageLimit,
 	minimumDownPaymentPercentageHigh
-} from './helpers';
-import { FormValues, FormFields } from './types';
+} from '../helpers';
+import { FormValues, FormFields } from '../types';
 
 type MortgageCalculatorProps = {
 	initialValues: FormValues;
 }
 
 const StyledMortgageCalculator = styled.div`
-	border-radius: .4em;
+	min-height: 56em;
 	padding: 2em;
+	background: ${props => props.theme.background};
 
 	.footer-container {
 		display: flex;

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FormValues } from '../types';
+import { FormValues } from '../../types';
 import { useCookies } from 'react-cookie';
 
 export default function SaveButton(props: {formValues: FormValues}) {
