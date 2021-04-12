@@ -37,7 +37,7 @@ To write component based CSS and theming.
 |-- |-- _Contains all the state handling logic in the form._\
 |-- |-- |-- __PaymentDetails.tsx__\
 |-- |-- |-- _Renders form elements._\
-|-- |-- |-- __nthlyPayment.tsx__
+|-- |-- |-- __MonthlyPayment.tsx__\
 |-- |-- |-- _Calculates and renders monthly payments._\
-|-- |-- |-- __veButton.tsx__
+|-- |-- |-- __SaveButton.tsx__\
 |-- |-- |-- _Renders the Save Button and sets the cookies._
