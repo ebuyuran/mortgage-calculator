@@ -33,15 +33,15 @@ To write component based CSS and theming.
 |-- App.tsx\
 |-- # Entry point that sets initial form values from a cookie\
 |-- # or end-point with the theme-switcher.\
-|-- |--\
+|-- |-- |\
 |-- |-- MortgageCalculator.tsx\
 |-- |-- # Contains all the state handling logic in the form.\
-|-- |-- |-- \
+|-- |-- |-- |\
 |-- |-- |-- PaymentDetails.tsx\
 |-- |-- |-- # Renders form elements.\
-|-- |-- |-- \
+|-- |-- |-- |\
 |-- |-- |-- MonthlyPayment.tsx\
 |-- |-- |-- # Calculates and renders monthly payments.\
-|-- |-- |-- \
+|-- |-- |-- |\
 |-- |-- |-- SaveButton.tsx\
 |-- |-- |-- # Renders the Save Button and sets the cookies.
